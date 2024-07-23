@@ -33,9 +33,23 @@
 
     <main class="px-4 py-8 gap-5 flex flex-col" id="contenedor">
       <!-- cards -->
-       <div class="pl-5 gap-5 flex flex-col border-l-2 border-[var(--Light-grayish-blue)] " id="replyContainer">
+      <div class="pl-5 gap-5 flex flex-col border-l-2 border-[var(--Light-grayish-blue)] " id="replyContainer">
         <!-- replycards -->
-       </div>
+      </div>
+      <!-- delete modal -->
+      <div class="hidden flex fixed inset-0 bg-gray-800 bg-opacity-50 items-center justify-center" id="modalDelete">
+        <div class="p-5 py-4 bg-[var(--White)] rounded-md">
+          <p class="">Delete comment</p>
+          <p class="">
+            Are you sure you want to delete this
+            comment? This will remove the comment and can't be undone.
+          </p>
+          <div>
+            <button class="" id="cancelDelete">NO, CANCEL</button>
+            <button class="">YES, DELETE</button>
+          </div>
+        </div>
+      </div>
     </main>
 
     
