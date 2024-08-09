@@ -13,6 +13,7 @@ let container = document.querySelector("#contenedor");
 
 function createCard(comments, currentUser) {
   comments.forEach((comment, commentIndex) => {
+    console.log(commentIndex);
     let card = document.createElement("div");
     card.className = "p-5 py-4 bg-[var(--White)] rounded-md";
 
@@ -22,7 +23,7 @@ function createCard(comments, currentUser) {
         alt="${comment.user.username}"
         class="w-8 h-8" 
         />
-        <p class="font-bold">${comment.user.username}</p>
+        <p class="font-medium">${comment.user.username}</p>
         <p class="text-[var(--Grayish-Blue)]">${comment.createdAt}</p>
       </div>
       <div>
@@ -45,11 +46,17 @@ function createCard(comments, currentUser) {
             </button>
         </span>
         <span 
-        class="flex gap-2 items-center cursor-pointer 
-        hover:text-[var(--Grayish-Blue)] text-[var(--Moderate-blue)]">
+          class="
+            flex gap-2 items-center 
+            cursor-pointer 
+            hover:text-[var(--Grayish-Blue)] 
+            text-[var(--Moderate-blue)] 
+            reply-button"
+          data-comment-index="${commentIndex}"
+        >
                 <img src="../images/icon-reply.svg" alt="Reply" class="w-4 h-4" />
                 <p class="font-semibold">Reply</p>
-              </span>
+        </span>
       </div>  
     `;
     container.appendChild(card);
@@ -57,6 +64,7 @@ function createCard(comments, currentUser) {
     if (comment.replies.length > 0) {
       let containerReply = document.querySelector("#replyContainer");
       comment.replies.forEach((reply, replyIndex) => {
+        console.log(replyIndex);
         let replyCard = document.createElement("div");
         replyCard.className = "p-5 py-4 bg-[var(--White)] rounded-md";
         let isReplyCurrentUser = reply.user.username === currentUser.username;
@@ -66,11 +74,11 @@ function createCard(comments, currentUser) {
             src="${reply.user.image.webp}" 
             alt="${reply.user.username}" 
             class="w-8 h-8" />
-            <p class="font-bold">${reply.user.username}</p>
+            <p class="font-medium">${reply.user.username}</p>
             ${
               isReplyCurrentUser
                 ? '<p class="bg-[var(--Moderate-blue)] text-xs text-white px-2 py-[2px] rounded-sm">you</p>'
-                : ""
+                : " "
             }
             <p class="text-[var(--Grayish-Blue)]">${reply.createdAt}</p>
           </div>
@@ -100,7 +108,6 @@ function createCard(comments, currentUser) {
               isReplyCurrentUser
                 ? `
               <span class="flex gap-4 items-center cursor-pointer">
-
                 <p class="flex items-center font-semibold cursor-pointer text-[var(--Soft-Red)]" id="delete-${commentIndex}-${replyIndex}">
                   <img 
                   src="../images/icon-delete.svg" 
@@ -109,7 +116,6 @@ function createCard(comments, currentUser) {
                   />
                   Delete
                 </p>
-
                 <p class="flex items-center font-semibold cursor-pointer text-[var(--Moderate-blue)]">
                   <img 
                   src="../images/icon-edit.svg" 
@@ -121,12 +127,16 @@ function createCard(comments, currentUser) {
               </span>
             `
                 : `
-              <span class="flex gap-2 items-center cursor-pointer hover:text-[var(--Grayish-Blue)] text-[var(--Moderate-blue)]">
-                <img 
-                src="../images/icon-reply.svg" 
-                alt="Reply" 
-                class="w-4 h-4" 
-                />
+              <span 
+                class="
+                  flex gap-2 items-center 
+                  cursor-pointer 
+                  hover:text-[var(--Grayish-Blue)] 
+                  text-[var(--Moderate-blue)] 
+                  reply-button"
+                data-comment-index="${commentIndex}"
+              >
+                <img src="../images/icon-reply.svg" alt="Reply" class="w-4 h-4" />
                 <p class="font-semibold">Reply</p>
               </span>
             `
@@ -135,11 +145,21 @@ function createCard(comments, currentUser) {
         `;
         containerReply.appendChild(replyCard);
         container.appendChild(containerReply);
+
         if (isReplyCurrentUser) {
-          document.getElementById(`delete-${commentIndex}-${replyIndex}`).addEventListener("click", showModalDelete);
+          document
+            .getElementById(`delete-${commentIndex}-${replyIndex}`)
+            .addEventListener("click", showModalDelete);
         }
       });
     }
+  });
+
+  document.querySelectorAll(".reply-button").forEach((button) => {
+    button.addEventListener("click", function () {
+      const commentIndex = this.getAttribute("data-comment-index");
+      showReplyCard(commentIndex, currentUser);
+    });
   });
 }
 
@@ -152,8 +172,9 @@ function currentUser(user) {
         class="flex-1 py-2 px-5 min-h-24 rounded-md
         border border-[var(--Light-gray)] 
         focus:border-[var(--Moderate-blue)] focus:outline-none" 
-        placeholder="Add a comment...">
-
+        placeholder="Add a comment..."
+        value=" "
+        >
       </textarea>
       <div class="flex justify-between mt-5 items-center" >
         <img 
@@ -164,16 +185,52 @@ function currentUser(user) {
         <button 
         class="bg-[var(--Moderate-blue)] hover:bg-[var(--Light-grayish-blue)]
         text-white 
-        px-4 py-2 
+        px-3 py-2 
         rounded-md 
-        h-12 w-28 
+        h-12 w-24 
         ">
-          Send
+          SEND
         </button>
       </div>
     </div>
   `;
   container.appendChild(userCard);
+}
+
+function showReplyCard(commentIndex, currentUser) {
+  const commentCard = container.children[commentIndex];
+  const replyCard = document.createElement("div");
+  replyCard.className = "p-5 py-4 bg-[var(--White)] rounded-md mt-4";
+
+  replyCard.innerHTML = `
+    <div class="flex gap-4 flex-col">
+      <textarea 
+        class="flex-1 py-2 px-5 min-h-24 rounded-md
+        border border-[var(--Light-gray)] 
+        focus:border-[var(--Moderate-blue)] focus:outline-none" 
+        placeholder="Add a reply...">
+      </textarea>
+    </div>
+    <div class="flex justify-between mt-5 items-center">
+      <img 
+        src="${currentUser.image.webp}" 
+        alt="${currentUser.username}" 
+        class="w-8 h-8" 
+      />
+      <button 
+        class="
+          bg-[var(--Moderate-blue)] 
+          hover:bg-[var(--Light-grayish-blue)]
+          text-white 
+          px-3 py-2 
+          rounded-md 
+          h-12 w-24 ">
+        Reply
+      </button>
+    </div>
+  `;
+
+  commentCard.insertAdjacentElement("afterend", replyCard);
 }
 
 // modal delete
@@ -188,4 +245,6 @@ function hiddenModalDelete() {
   modalContainer.classList.add("hidden");
 }
 
-document.getElementById("cancelDelete").addEventListener("click", hiddenModalDelete);
+document
+  .getElementById("cancelDelete")
+  .addEventListener("click", hiddenModalDelete);
