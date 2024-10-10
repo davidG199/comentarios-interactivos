@@ -11,7 +11,7 @@ This is a solution to the [Interactive comments section challenge on Frontend Me
 
 ## Overview
 
-[img](./design/desktop-design.jpg)
+![](./design/desktop-design.jpg)
 
 ### The challenge
 
