@@ -894,6 +894,14 @@ video {
   padding-left: 1.5rem;
 }
 
+.pl-10 {
+  padding-left: 2.5rem;
+}
+
+.pl-24 {
+  padding-left: 6rem;
+}
+
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
