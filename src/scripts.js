@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Función para obtener los datos del archivo JSON
 function fetchComments() {
-  fetch("../data.json")
+  fetch("/data.json")
     .then((response) => response.json())
     .then((data) => {
       initializeCommentsSection(data);
